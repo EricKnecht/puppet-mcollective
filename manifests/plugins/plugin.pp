@@ -19,11 +19,13 @@
 #
 define mcollective::plugins::plugin(
   $type,
-  $ensure      = present,
-  $ddl         = false,
-  $application = false,
-  $plugin_base = $mcollective::params::plugin_base,
-  $module_source = 'puppet:///modules/mcollective/plugins'
+  $ensure        = present,
+  $ddl           = false,
+  $application   = false,
+  $plugin_base   = $mcollective::params::plugin_base,
+  $module_source = 'puppet:///modules/mcollective/plugins',
+  $override_rb   = $name,
+  $override_ddl  = $name
 ) {
 
   include mcollective::params
@@ -43,25 +45,31 @@ define mcollective::plugins::plugin(
   if ($ddl == true or $application == true) and $type != 'agent' {
     fail('DDLs and Applications only apply to Agent plugins')
   }
-
+  $plugin_path =  $type ? {
+    'agent' => "${type}/${name}/${type}",
+    'facts' => "${type}/${name}",
+    default => "${type}"
+  }
+  
   file { "${plugin_base_real}/${type}/${name}.rb":
     ensure => $ensure,
-    source => "${module_source}/${type}/${name}.rb",
+    source => "${module_source}/${plugin_path}/${override_rb}.rb",
     notify => Class['mcollective::server::service'],
   }
 
   if $ddl {
-    file { "${plugin_base_real}/${type}/${name}.ddl":
+    file {"${plugin_base_real}/${type}/${name}.ddl":
       ensure => $ensure,
-      source => "${module_source}/${type}/${name}.ddl",
+      source => "${module_source}/${plugin_path}/${override_ddl}.ddl",
     }
   }
 
   if $application {
     file { "${plugin_base_real}/application/${name}.rb":
       ensure => $ensure,
-      source => "${module_source}/application/${name}.rb",
+      source => "${module_source}/agent/${name}/application/$name.rb",
     }
   }
+  
 
 }

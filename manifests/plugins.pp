@@ -37,31 +37,25 @@ class mcollective::plugins(
     notify => Class['mcollective::server::service'],
   }
 
-  mcollective::plugins::plugin { 'registration':
+  
+  mcollective::plugins::plugin { 'facter':
     ensure      => present,
-    type        => 'agent',
-    ddl         => false,
-    application => false,
-  }
-  mcollective::plugins::plugin { 'facter_facts':
-    ensure => present,
-    type   => 'facts',
-  }
-  mcollective::plugins::plugin { 'yaml_facts':
-    ensure => present,
-    type   => 'facts',
-  }
+    type        => 'facts',
+    override_rb => 'facter_facts'
+  } 
   mcollective::plugins::plugin { 'service':
     ensure      => present,
     type        => 'agent',
     ddl         => true,
     application => false,
+    override_rb => 'puppet-service'
   }
   mcollective::plugins::plugin { 'package':
     ensure      => present,
     type        => 'agent',
     ddl         => true,
     application => false,
+    override_rb => 'puppet-package'
   }
   mcollective::plugins::plugin { 'meta':
     ensure      => present,
@@ -74,7 +68,7 @@ class mcollective::plugins(
     ensure      => present,
     type        => 'agent',
     ddl         => true,
-    application => true,
+    application => false,
   }
 
 }

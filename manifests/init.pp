@@ -64,11 +64,14 @@ class mcollective(
   $client_config        = 'UNSET',
   $client_config_file   = '/etc/mcollective/client.cfg',
   $stomp_server         = $mcollective::params::stomp_server,
-  $stomp_port           = '61613',
+  $stomp_port           = $mcollective::params::stomp_port,
+  $stomp_user           = $mcollective::params::stomp_user,
+  $stomp_passwd         = $mcollective::params::stomp_passwd,
   $mc_security_provider = $mcollective::params::mc_security_provider,
   $mc_security_psk      = $mcollective::params::mc_security_psk,
-  $fact_source          = 'facter',
-  $yaml_facter_source   = '/etc/mcollective/facts.yaml'
+  $fact_source          = 'yaml',
+  $yaml_facter_source   = '/etc/mcollective/facts.yaml',
+  $mc_topicprefix       = $mcollective::params::mc_topicprefix
 ) inherits mcollective::params {
 
   $v_bool = [ '^true$', '^false$' ]

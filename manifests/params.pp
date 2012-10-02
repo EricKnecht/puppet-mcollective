@@ -22,6 +22,11 @@ class mcollective::params {
   $mc_security_provider = 'psk'
   $mc_security_psk      = 'changemeplease'
 
+  $stomp_user    = 'mcollective'
+  $stomp_passwd  = 'marionette'
+  $stomp_server  = 'stomp'
+  $stomp_port    = '6163'
+
   $nrpe_dir_real = $operatingsystem ? {
     /(?i-mx:centos|fedora|redhat|oel)/ => '/etc/nrpe.d',
     default                            => '/etc/nagios/nrpe.d',
@@ -63,11 +68,6 @@ class mcollective::params {
   $client_config_group  = '0'
   $server_config_owner  = '0'
   $server_config_group  = '0'
-
-  $stomp_user    = 'mcollective'
-  $stomp_passwd  = 'marionette'
-  $stomp_server  = 'stomp'
-  $stomp_port    = '6163'
 
   $pkg_state = 'present'
 
